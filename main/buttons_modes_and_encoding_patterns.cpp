@@ -1,5 +1,5 @@
-#include <Encoder.h>                // From Arduino IDE
-#include <Adafruit_NeoPixel.h>      // From Arduino IDE
+#include <Encoder.h>               // From Arduino IDE
+#include <Adafruit_NeoPixel.h>     // From Arduino IDE
 
 const int NUM_LEDS = 24;           // number of leds in strip
 const int LED_PIN = 5;             // pin for led strip
