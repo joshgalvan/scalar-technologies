@@ -116,5 +116,4 @@ void loop()
         strip.setPixelColor(2, 0, 0, 255);
         strip.show();
     }
-
 }
