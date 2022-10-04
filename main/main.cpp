@@ -1,24 +1,31 @@
-#include <Encoder.h>                 // From Arduino IDE
-#include <Adafruit_NeoPixel.h>       // From Arduino IDE
-#include <LiquidCrystal_I2C.h>       // From https://lastminuteengineers.com/i2c-lcd-arduino-tutorial/
+// Notes:
+//
+// On my LCD the text that was displayed was very buggy and not very clear.
+// Would like to fix this in a further update but I'm not exactly sure why it's
+// happening.
+//
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);  // set the LCD address to 0x3F for a 16 chars and 2 line display
+#include <Encoder.h>               // From Arduino IDE
+#include <Adafruit_NeoPixel.h>     // From Arduino IDE
+#include <LiquidCrystal_I2C.h>     // From https://lastminuteengineers.com/i2c-lcd-arduino-tutorial/
+
 
 const int NUM_LEDS = 12;           // number of leds in strip
 const int LED_PIN = 5;             // pin for led strip
 const int BRIGHTNESS = 10;         // brightness of all leds
 const int WHEEL_SIZE = 256;        // how many entries in the color wheel
 const boolean MOVE_LIGHT = false;  // move one light around or keep all lights on
-
 const int ENCODER_PIN_1 = 2;
 const int ENCODER_PIN_2 = 3;
 const int ENCODER_BUTTON = 4;
-
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_RGB + NEO_KHZ800);
-Encoder encoder(ENCODER_PIN_1, ENCODER_PIN_2);
 int mode = 0;
 long lastPush = 0;
 int autoPosition = 0;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_RGB + NEO_KHZ800);
+Encoder encoder(ENCODER_PIN_1, ENCODER_PIN_2);
+
 
 // Turn all LEDs off.
 void initializeToBlack()
@@ -50,10 +57,11 @@ void setup()
     // LCD Setup
     lcd.init();
     lcd.clear();
-    lcd.backlight(); // Make sure backlight is on
+    // Turn backlight on.
+    lcd.backlight();
 
     // Print a message on both lines of the LCD.
-    lcd.setCursor(2,0); // Set cursor to character 2 on line 0
+    lcd.setCursor(2,0);
     lcd.print("Test setup 1");
 
     lcd.setCursor(2,1);
@@ -96,6 +104,10 @@ void loop()
             // Off
             case 0:
                 lcd.setCursor(2, 1);
+                // Printing blank characters is the same as erasing it. I
+                // chose to print this many characters because that is the
+                // maximum length of characters that would be printed on the
+                // second row.
                 lcd.print("        ");
                 lcd.setCursor(2, 1);
                 lcd.print("Off");
