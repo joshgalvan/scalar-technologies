@@ -1,10 +1,3 @@
-// Notes:
-//
-// On my LCD the text that was displayed was very buggy and not very clear.
-// Would like to fix this in a further update but I'm not exactly sure why it's
-// happening.
-//
-
 #include <Encoder.h>               // From Arduino IDE
 #include <Adafruit_NeoPixel.h>     // From Arduino IDE
 #include <LiquidCrystal_I2C.h>     // From https://lastminuteengineers.com/i2c-lcd-arduino-tutorial/
@@ -12,24 +5,27 @@
 
 const int NUM_LEDS = 24;           // number of leds in strip
 const int LED_PIN = 5;             // pin for led strip
-const int BRIGHTNESS = 10;         // brightness of all leds
-const int WHEEL_SIZE = 256;        // how many entries in the color wheel
-const boolean MOVE_LIGHT = false;  // move one light around or keep all lights on
 const int ENCODER_PIN_1 = 2;
 const int ENCODER_PIN_2 = 3;
 const int ENCODER_BUTTON = 4;
+
 int mode = 0;
-long lastPush = 0;
-int autoPosition = 0;
+int currentMode = 0;
 int oldMode = 0;
-int oldLedPosition = 0;
-int currentLedPosition = 0;
+
+long knobValue = 0;
+long encoderPosition = 0;
+int currentEncoderPosition = 0;
+int encoderLoopPosition = 0;
+int currentLoopPosition = 0;
+int oldLoopPosition = 0;
+
+int lastPush = 0;
 int buttonPushed = 0;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_RGB + NEO_KHZ800);
 Encoder encoder(ENCODER_PIN_1, ENCODER_PIN_2);
-
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_RGB + NEO_KHZ800);
 
 // Turn all LEDs off.
 void initializeToBlack()
@@ -64,21 +60,27 @@ void setup()
     // Turn backlight on.
     lcd.backlight();
 
-    // Print a message on both lines of the LCD.
-    lcd.setCursor(2,0);
-    lcd.print("Test setup 1");
-
-    lcd.setCursor(2,1);
-    lcd.print("Test setup 2");
+    // Initialize encoder position reading.
+    knobValue = encoder.read() / 2;
+    encoderPosition = normalize(knobValue, NUM_LEDS);
+    encoderLoopPosition = 0;
 }
 
 void loop()
 {
+    // Implement knob turn loop-around.
+    knobValue = encoder.read() / 2;
+    encoderPosition = normalize(knobValue, NUM_LEDS);
+
+    if (encoderPosition != currentEncoderPosition) {
+        encoderLoopPosition++;
+        // Loop around.
+        if (encoderLoopPosition > 2) encoderLoopPosition = 0;
+    }
+    currentEncoderPosition = encoderPosition;
+
+    // Implement button bush loop-around.
     int button = digitalRead(ENCODER_BUTTON);
-    long knobValue = encoder.read() / 2;
-    long ledPosition = normalize(knobValue, NUM_LEDS);
-    long colorValue = normalize(knobValue * 5, WHEEL_SIZE);
-    long sleepValue = abs(knobValue) % 500;
 
     if (button == 0) {
         if ((millis() - lastPush) > 250) {
@@ -90,113 +92,110 @@ void loop()
         }
     }
 
-    // All off
-    if (mode == 0) {
-        int currentMode = 1;
-        if (currentMode != oldMode || buttonPushed) {
-            lcd.clear();
-            lcd.setCursor(2, 0);
-            lcd.print("Mode 0");
-            initializeToBlack();
-            strip.show();
-            oldMode = currentMode;
-            buttonPushed = 0;
-        }
-    }
+    switch (mode) {
 
-    // Switching Mode
-    if  (mode == 1) {
-        int currentMode = 2;
-        if (currentMode != oldMode) {
-            lcd.clear();
-            lcd.setCursor(2, 0);
-            lcd.print("Mode 1");
-            oldMode = currentMode;
-        }
+        case 0:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                lcd.clear();
+                lcd.setCursor(2, 0);
+                lcd.print("Mode 0");
+                initializeToBlack();
+                strip.show();
+                oldMode = currentMode;
+                buttonPushed = 0;
+            }
+            break;
 
-        switch(ledPosition)
-        {
-            // Off
-            case 0:
-                currentLedPosition = 1;
-                if (currentLedPosition != oldLedPosition || buttonPushed) {
-                    lcd.setCursor(2, 1);
-                    // Printing blank characters is the same as erasing it. I
-                    // chose to print this many characters because that is the
-                    // maximum length of characters that would be printed on the
-                    // second row.
-                    lcd.print("        ");
-                    lcd.setCursor(2, 1);
-                    lcd.print("Off");
-                    initializeToBlack();
-                    oldLedPosition = currentLedPosition;
-                    buttonPushed = 0;
-                }
-                break;
+        case 1:
+            currentMode = 2;
+            if (currentMode != oldMode) {
+                lcd.clear();
+                lcd.setCursor(2, 0);
+                lcd.print("Mode 1");
+                oldMode = currentMode;
+            }
 
-            // C Major
-            case 1:
-                currentLedPosition = 2;
-                if (currentLedPosition != oldLedPosition || buttonPushed) {
-                    lcd.setCursor(2, 1);
-                    lcd.print("        ");
-                    lcd.setCursor(2, 1);
-                    lcd.print("C Major");
-                    initializeToBlack();
-                    strip.setPixelColor(3, 0, 0, 255);
-                    strip.setPixelColor(2, 0, 0, 255);
-                    strip.setPixelColor(1, 0, 0, 255);
-                    oldLedPosition = currentLedPosition;
-                    buttonPushed = 0;
-                }
-                break;
+            switch (encoderLoopPosition) {
 
-            // C# Major
-            case 2:
-                currentLedPosition = 3;
-                if (currentLedPosition != oldLedPosition || buttonPushed) {
-                    lcd.setCursor(2, 1);
-                    lcd.print("        ");
-                    lcd.setCursor(2, 1);
-                    lcd.print("C# Major");
-                    initializeToBlack();
-                    strip.setPixelColor(4, 0, 0, 255);
-                    strip.setPixelColor(12, 0, 0, 255);
-                    strip.setPixelColor(11, 0, 0, 255);
-                    oldLedPosition = currentLedPosition;
-                    buttonPushed = 0;
-                }
-                break;
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        lcd.setCursor(2, 1);
+                        // Printing blank characters is the same as erasing it. I
+                        // chose to print this many characters because that is the
+                        // maximum length of characters that would be printed on the
+                        // second row.
+                        lcd.print("        ");
+                        lcd.setCursor(2, 1);
+                        lcd.print("Off");
+                        initializeToBlack();
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
 
-            default:
-                currentLedPosition = 4;
-                if (currentLedPosition != oldLedPosition || buttonPushed) {
-                    lcd.setCursor(2, 1);
-                    lcd.print("        ");
-                    lcd.setCursor(2, 1);
-                    lcd.print("Default");
-                    initializeToBlack();
-                    strip.setPixelColor(0, 0, 0, 255);
-                    oldLedPosition = currentLedPosition;
-                    buttonPushed = 0;
-                }
-                break;
-        }
-        strip.show();
-    }
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        lcd.setCursor(2, 1);
+                        lcd.print("        ");
+                        lcd.setCursor(2, 1);
+                        lcd.print("C Major");
+                        initializeToBlack();
+                        strip.setPixelColor(3, 0, 0, 255);
+                        strip.setPixelColor(2, 0, 0, 255);
+                        strip.setPixelColor(1, 0, 0, 255);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
 
-    // All on
-    if (mode == 2) {
-        int currentMode = 3;
-        if (currentMode != oldMode) {
-            lcd.clear();
-            lcd.setCursor(2, 0);
-            lcd.print("All on");
-            for (int i = 0; i < NUM_LEDS; i++) {
-                strip.setPixelColor(i, 0, 0, 255);
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        lcd.setCursor(2, 1);
+                        lcd.print("        ");
+                        lcd.setCursor(2, 1);
+                        lcd.print("C# Major");
+                        initializeToBlack();
+                        strip.setPixelColor(4, 0, 0, 255);
+                        strip.setPixelColor(12, 0, 0, 255);
+                        strip.setPixelColor(11, 0, 0, 255);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                default:
+                    currentLoopPosition = 4;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        lcd.setCursor(2, 1);
+                        lcd.print("        ");
+                        lcd.setCursor(2, 1);
+                        lcd.print("Default");
+                        initializeToBlack();
+                        strip.setPixelColor(0, 0, 0, 255);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
             }
             strip.show();
-            oldMode = currentMode;
-        }
+            break;
+
+        case 2:
+            currentMode = 3;
+            if (currentMode != oldMode) {
+                lcd.clear();
+                lcd.setCursor(2, 0);
+                lcd.print("All on");
+                for (int i = 0; i < NUM_LEDS; i++) {
+                    strip.setPixelColor(i, 0, 0, 255);
+                }
+                strip.show();
+                oldMode = currentMode;
+            }
+            break;
     }
 }
