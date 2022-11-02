@@ -271,7 +271,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("c", 0);
+                        setScale("ceghjlnoqstvx", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -282,7 +282,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("c", 1);
+                        setScale("coeqfrhtjvkmx", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -293,7 +293,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("c", 2);
+                        setScale("coeqfrhtjvknx", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
