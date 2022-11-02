@@ -69,15 +69,15 @@ void setScale(char* scale, int length, int color) {
 }
 
 void turnPrint(char* text) {
-    lcd.setCursor(2, 1);
+    lcd.setCursor(1, 1);
     lcd.print("                ");
-    lcd.setCursor(2, 1);
+    lcd.setCursor(1, 1);
     lcd.print(text);
 }
 
 void pressPrint (char* text) {
     lcd.clear();
-    lcd.setCursor(2, 0);
+    lcd.setCursor(1, 0);
     lcd.print(text);
 }
 
@@ -168,7 +168,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("a", 1, 0);
+                        setScale("acefhjlmoqrtvx", 14, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -179,7 +179,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("a", 1, 1);
+                        setScale("acdfhikmmoprtuw", 15, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -190,7 +190,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("a", 1, 2);
+                        setScale("acdfhilmmoprtux", 15, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
