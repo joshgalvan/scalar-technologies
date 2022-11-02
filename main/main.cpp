@@ -34,42 +34,44 @@ void initializeToBlack() {
     }
 }
 
-void setScale(char* scale, int length, int color) {
+void setScale(char* scale, int color) {
 // This function sets which LEDs to be lit up on the strip. Pass a string like
-// "abc" to light up leds 0, 1, 2. Each letter of the alphabet corresponds to
-// a position on the LED strip in respect to that letter's position in the
-// alphabet. A string of "xwjab" passed into this function would set LEDs 23,
-// 22, 9, 0, 1. You must pass in the length of the string you're using, so the
-// string "xwjab" would have a 5 passed in for the second "length" argument.
-// The third parameter, "color", accepts values of 0, 1, 2 which correspond to
-// lighting up all the LEDs either Red, Green, or Blue respectively. I used the
-// alphabet because I needed 24 unique characters to represent each available
-// LED to make the function easy to use.
+// "abc" to set LEDs 0, 1, and 2. You still need to strip.show() them to make
+// them light up, but I've already done that in the switch statements. Each
+// letter of the alphabet corresponds to a position on the LED strip in respect
+// to that letter's position in the alphabet. A string of "xwjab" passed into
+// this function would set LEDs 23, 22, 9, 0, and 1. The second parameter,
+// "color", accepts values of 0, 1, 2 which correspond to lighting up all the
+// LEDs either Red, Green, or Blue respectively. I used the alphabet because I
+// needed 24 unique characters to represent each available LED to make the
+// function easy to use.
     initializeToBlack();
     switch (color) {
         // Red
         case 0:
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; scale[i] != '\0'; i++) {
                 strip.setPixelColor(scale[i] - 'a', 0, 255, 0);
             }
             break;
 
         // Green
         case 1:
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; scale[i] != '\0'; i++) {
                 strip.setPixelColor(scale[i] - 'a', 255, 0, 0);
             }
             break;
 
         // Blue
         case 2:
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; scale[i] != '\0'; i++) {
                 strip.setPixelColor(scale[i] - 'a', 0, 0, 255);
             }
             break;
     }
 }
 
+// This function is used to print onto the LCD how we want when we change states
+// via a turn of the knob.
 void turnPrint(char* text) {
     lcd.setCursor(1, 1);
     lcd.print("                ");
@@ -77,6 +79,8 @@ void turnPrint(char* text) {
     lcd.print(text);
 }
 
+// This function is used to print onto the LCD how we want to when we change
+// states via a press of the encoder.
 void pressPrint (char* text) {
     lcd.clear();
     lcd.setCursor(1, 0);
@@ -115,12 +119,12 @@ void setup() {
 
 void loop() {
     // Implement knob turn loop-around. This reads the true encoder position
-    // from the hardware and then checks if that true position is different
-    // from the "currentEncoderPosition" variable that was set in the last loop
-    // before updating "currentEncoderPosition". This allows us to know when
-    // the encoder changes positions and update our switch statement based on a
-    // software variable, instead of the actual hardware encoder position,
-    // which removes unused encoder positions that the user would have to cycle
+    // from the hardware and then checks if that true position is different from
+    // the "currentEncoderPosition" variable that was set in the last loop
+    // before updating "currentEncoderPosition". This allows us to know when the
+    // encoder changes positions and update our switch statement based on a
+    // software variable, instead of the actual hardware encoder position, which
+    // removes unused encoder positions that the user would have to cycle
     // through that do nothing. Now each change in the encoder knob position
     // will always result in a new state.
     knobValue = encoder.read() / 2;
@@ -129,12 +133,13 @@ void loop() {
     if (encoderPosition != currentEncoderPosition) {
         if (encoderPosition > currentEncoderPosition) {
             encoderLoopPosition++;
+            // Loop around.
+            if (encoderLoopPosition > 2) encoderLoopPosition = 0;
         } else {
             encoderLoopPosition--;
+            // Loop around.
+            if (encoderLoopPosition < 0) encoderLoopPosition = 2;
         }
-        // Loop around.
-        if (encoderLoopPosition > 2) encoderLoopPosition = 0;
-        if (encoderLoopPosition < 0) encoderLoopPosition = 2;
     }
     currentEncoderPosition = encoderPosition;
 
@@ -153,6 +158,10 @@ void loop() {
         }
     }
 
+    // Could use interrupts for both the button and encoderPosition but this
+    // this works too, and the pin configuration for the Rev3 isn't clear which
+    // pins are compatible with interrupts.
+
     switch (mode) {
 
         // C
@@ -170,7 +179,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("acefhjlmoqrtvx", 14, 1);
+                        setScale("acefhjlmoqrtvx", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -181,7 +190,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("acdfhikmmoprtuw", 15, 1);
+                        setScale("acdfhikmmoprtuw", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -192,7 +201,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("acdfhilmmoprtux", 15, 1);
+                        setScale("acdfhilmmoprtux", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -216,7 +225,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("bdfgikmnprsuw", 13, 1);
+                        setScale("bdfgikmnprsuw", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -227,7 +236,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("bdegijlnpqsuvx", 14, 1);
+                        setScale("bdegijlnpqsuvx", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -238,7 +247,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("bdegijmnpqsuv", 13, 1);
+                        setScale("bdegijmnpqsuv", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -262,7 +271,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("c", 1, 0);
+                        setScale("c", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -273,7 +282,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("c", 1, 1);
+                        setScale("c", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -284,7 +293,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("c", 1, 2);
+                        setScale("c", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -308,7 +317,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("d", 1, 0);
+                        setScale("d", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -319,7 +328,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("d", 1, 1);
+                        setScale("d", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -330,7 +339,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("d", 1, 2);
+                        setScale("d", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -354,7 +363,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("e", 1, 0);
+                        setScale("e", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -365,7 +374,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("e", 1, 1);
+                        setScale("e", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -376,7 +385,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("e", 1, 2);
+                        setScale("e", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -400,7 +409,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("f", 1, 0);
+                        setScale("f", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -411,7 +420,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("f", 1, 1);
+                        setScale("f", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -422,7 +431,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("f", 1, 2);
+                        setScale("f", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -446,7 +455,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("g", 1, 0);
+                        setScale("g", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -457,7 +466,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("g", 1, 1);
+                        setScale("g", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -468,7 +477,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("g", 1, 2);
+                        setScale("g", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -492,7 +501,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("h", 1, 0);
+                        setScale("h", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -503,7 +512,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("h", 1, 1);
+                        setScale("h", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -514,7 +523,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("h", 1, 2);
+                        setScale("h", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -538,7 +547,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("i", 1, 0);
+                        setScale("i", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -549,7 +558,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("i", 1, 1);
+                        setScale("i", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -560,7 +569,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("i", 1, 2);
+                        setScale("i", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -584,7 +593,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("j", 1, 0);
+                        setScale("j", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -595,7 +604,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("j", 1, 1);
+                        setScale("j", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -606,7 +615,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("j", 1, 2);
+                        setScale("j", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -630,7 +639,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("k", 1, 0);
+                        setScale("k", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -641,7 +650,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("k", 1, 1);
+                        setScale("k", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -652,7 +661,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("k", 1, 2);
+                        setScale("k", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -676,7 +685,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("l", 1, 0);
+                        setScale("l", 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -687,7 +696,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("l", 1, 1);
+                        setScale("l", 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -698,7 +707,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("l", 1, 2);
+                        setScale("l", 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
