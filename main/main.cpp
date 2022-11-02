@@ -5,8 +5,8 @@
 
 const int NUM_LEDS = 24;           // Number of LEDs on strip
 const int LED_PIN = 5;             // Pin for LED strip
-const int ENCODER_PIN_1 = 2;
-const int ENCODER_PIN_2 = 3;
+const int ENCODER_KNOB = 2;
+const int ENCODER_DT = 3;
 const int ENCODER_BUTTON = 4;
 
 int mode = 0;
@@ -24,8 +24,8 @@ unsigned long lastPush = 0;
 int buttonPushed = 0;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_RGB + NEO_KHZ800);
-LiquidCrystal_I2C lcd(0x27, 16, 2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
-Encoder encoder(ENCODER_PIN_1, ENCODER_PIN_2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+Encoder encoder(ENCODER_KNOB, ENCODER_DT);
 
 void initializeToBlack() {
 // Turn all LEDs off.
@@ -37,12 +37,14 @@ void initializeToBlack() {
 void setScale(char* scale, int length, int color) {
 // This function sets which LEDs to be lit up on the strip. Pass a string like
 // "abc" to light up leds 0, 1, 2. Each letter of the alphabet corresponds to
-// a position on the LED strip in respect to that letters position in the
+// a position on the LED strip in respect to that letter's position in the
 // alphabet. A string of "xwjab" passed into this function would set LEDs 23,
 // 22, 9, 0, 1. You must pass in the length of the string you're using, so the
-// string "xwjab" would have a 5 passed in for the second "lenngth" argument.
+// string "xwjab" would have a 5 passed in for the second "length" argument.
 // The third parameter, "color", accepts values of 0, 1, 2 which correspond to
-// lighting up all the LEDs either Red, Green, or Blue respectively.
+// lighting up all the LEDs either Red, Green, or Blue respectively. I used the
+// alphabet because I needed 24 unique characters to represent each available
+// LED to make the function easy to use.
     initializeToBlack();
     switch (color) {
         // Red
@@ -136,7 +138,7 @@ void loop() {
     }
     currentEncoderPosition = encoderPosition;
 
-    // Implement button bush loop-around. The encoder button produces a unique
+    // Implement button push loop-around. The encoder button produces a unique
     // value when it is pressed down, making it easy to detect when the button
     // is pressed.
     int button = digitalRead(ENCODER_BUTTON);
@@ -214,7 +216,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("b", 1, 0);
+                        setScale("bdfgikmnprsuw", 13, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -225,7 +227,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("b", 1, 1);
+                        setScale("bdegijlnpqsuvx", 14, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -236,7 +238,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("b", 1, 2);
+                        setScale("bdegijmnpqsuv", 13, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
