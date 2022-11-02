@@ -146,7 +146,7 @@ void loop() {
             lastPush = millis();
             mode++;
             // Loop around.
-            if (mode > 2) mode = 0;
+            if (mode > 11) mode = 0;
             buttonPushed = 1;
         }
     }
@@ -168,7 +168,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("abc", 3, 0);
+                        setScale("a", 1, 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -179,7 +179,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("abc", 3, 1);
+                        setScale("a", 1, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -190,7 +190,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("abc", 3, 2);
+                        setScale("a", 1, 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -214,7 +214,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("def", 3, 0);
+                        setScale("b", 1, 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -225,7 +225,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("def", 3, 1);
+                        setScale("b", 1, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -236,7 +236,7 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("def", 3, 2);
+                        setScale("b", 1, 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -260,7 +260,7 @@ void loop() {
                     currentLoopPosition = 1;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Major");
-                        setScale("ghi", 3, 0);
+                        setScale("c", 1, 0);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -271,7 +271,7 @@ void loop() {
                     currentLoopPosition = 2;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Natural Minor");
-                        setScale("ghi", 3, 1);
+                        setScale("c", 1, 1);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
@@ -282,7 +282,421 @@ void loop() {
                     currentLoopPosition = 3;
                     if (currentLoopPosition != oldLoopPosition || buttonPushed) {
                         turnPrint("Harmonic Minor");
-                        setScale("ghi", 3, 2);
+                        setScale("c", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // D# and Eb
+        case 3:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("D# and Eb");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("d", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("d", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("d", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // E
+        case 4:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("E");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("e", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("e", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("e", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // F
+        case 5:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("F");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("f", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("f", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("f", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // F# and Gb
+        case 6:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("F# and Gb");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("g", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("g", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("g", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // G
+        case 7:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("G");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("h", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("h", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("h", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // G# and Ab
+        case 8:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("G# and Ab");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("i", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("i", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("i", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // A
+        case 9:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("A");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("j", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("j", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("j", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // A# and Bb
+        case 10:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("A# and Bb");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("k", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("k", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("k", 1, 2);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+            }
+            strip.show();
+            break;
+
+        // B
+        case 11:
+            currentMode = 1;
+            if (currentMode != oldMode || buttonPushed) {
+                pressPrint("B");
+                oldMode = currentMode;
+            }
+
+            switch (encoderLoopPosition) {
+
+                // Major
+                case 0:
+                    currentLoopPosition = 1;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Major");
+                        setScale("l", 1, 0);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 1:
+                    currentLoopPosition = 2;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Natural Minor");
+                        setScale("l", 1, 1);
+                        oldLoopPosition = currentLoopPosition;
+                        buttonPushed = 0;
+                    }
+                    break;
+
+                // Natural Minor
+                case 2:
+                    currentLoopPosition = 3;
+                    if (currentLoopPosition != oldLoopPosition || buttonPushed) {
+                        turnPrint("Harmonic Minor");
+                        setScale("l", 1, 2);
                         oldLoopPosition = currentLoopPosition;
                         buttonPushed = 0;
                     }
