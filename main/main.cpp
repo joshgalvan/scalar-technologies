@@ -70,8 +70,8 @@ void setScale(char* scale, int color) {
     }
 }
 
-// This function is used to print onto the LCD how we want when we change states
-// via a turn of the knob.
+// This function is used to print onto the LCD how we want to when we change
+// states via a turn of the knob.
 void turnPrint(char* text) {
     lcd.setCursor(1, 1);
     lcd.print("                ");
